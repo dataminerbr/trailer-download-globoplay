@@ -90,7 +90,6 @@ for ep in selecionados:
         "-f", "bv*+ba/b",
         "--merge-output-format", FORMATO,
         "--concurrent-fragments", str(THREADS),
-        #"--download-sections", "*00:00:05-01:10:00",
         "-o", saida,
         url,
     ]
@@ -98,10 +97,9 @@ for ep in selecionados:
     try:
         subprocess.run(cmd, check=True)
         print(f"✅ Episódio {saida.replace('.%(ext)s', f'.{FORMATO}')} baixado com sucesso!\n")
-        # Renomear
-        subprocess.run(["powershell", "-File", "Renomear.ps1", saida])
         # Delay
         print(f"\033[33mAguardando {DELAY} Segundos\033[0m")
         time.sleep(DELAY)
     except subprocess.CalledProcessError as e:
         print(f"⚠️ Erro ao baixar {saida.replace('.%(ext)s', f'.{FORMATO}')}: {e}\n")
+
