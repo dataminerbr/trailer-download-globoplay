@@ -1,0 +1,22 @@
+{
+  "serie_title": "Três Graças",
+  "quantidade": 2,
+  "episodios": [
+    {
+      "numero": "001",
+      "titulo": "Três Graças",
+      "sinopse": "Preview - Três Graças",
+      "capa": "https://s04.video.glbimg.com/x216/14030043.jpg",
+      "link": "https://globoplay.globo.com/v/14030043/",
+      "tipo": "extra"
+    },
+    {
+      "numero": "002",
+      "titulo": "Três Graças",
+      "sinopse": "Trailer - Três Graças",
+      "capa": "https://s03.video.glbimg.com/x216/14018570.jpg",
+      "link": "https://globoplay.globo.com/v/14018570/",
+      "tipo": "extra"
+    }
+  ]
+}
