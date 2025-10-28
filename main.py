@@ -90,6 +90,8 @@ for ep in selecionados:
         "-f", "bv*+ba/b",
         "--merge-output-format", FORMATO,
         "--concurrent-fragments", str(THREADS),
+        "--add-header", "Referer: https://globoplay.globo.com/",
+        "--add-header", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
         "-o", saida,
         url,
     ]
@@ -102,4 +104,5 @@ for ep in selecionados:
         time.sleep(DELAY)
     except subprocess.CalledProcessError as e:
         print(f"⚠️ Erro ao baixar {saida.replace('.%(ext)s', f'.{FORMATO}')}: {e}\n")
+
 
