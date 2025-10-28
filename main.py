@@ -5,12 +5,18 @@ from InquirerPy import inquirer
 
 
 #######CONFIG#######
-FORMATO = 'mp4'                               # Formato original é MP4, se quser criar Metadados, mude para MKV.
-FOLDER = ''                                   # Vazio cria uma pasta downloads.
-F_PROFILE = 'PROFILE.default-release'         # Aqui vai o nome da pasta do profile firefox.
-INVERTER_EPS = False                          # Isto corrige a ordem invertida se necessário.
-DELAY = 10                                    # Delay apra proteger o cookie
-THREADS = 2                                   # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
+FOLDER = ''                                      # Vazio cria uma pasta downloads.
+F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+####################
+INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
+DELAY = 10                                       # Delay apra proteger o cookie
+THREADS = 2                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG.
+CHECK_SEGS = True                                # Só funciona com HLS Nativo, True só deixa remuxar se não faltar segmentos.
+RESET_SEGS = False                               # Se ativada, quando um segmento falhar irá recomeçar o download do segmento zero.
+RETRY_SEGS = 10                                  # Se o segmento falhar, tenta baixar ele novamente por 10x.
+RETRY_VIDE = 5                                   # Se o video falhar, ele tenta novamente por 5x.
 ####################
 
 
@@ -96,13 +102,29 @@ for ep in selecionados:
         url,
     ]
 
+    if HLS_NATIVE:
+        cmd.append("--hls-prefer-native")
+
+        # só faz sentido se for HLS nativo
+        if CHECK_SEGS:
+            cmd.append("--abort-on-unavailable-fragment")
+
+    if RESET_SEGS:
+        cmd.extend(["--no-continue", "--no-part"])
+
+    # podem sempre ser usados juntos, ou isolados
+    if RETRY_SEGS:
+        cmd.extend(["--fragment-retries", str(RETRY_SEGS)])
+    if RETRY_VIDE:
+        cmd.extend(["--retries", str(RETRY_VIDE)])
+
     try:
         subprocess.run(cmd, check=True)
         print(f"✅ Episódio {saida.replace('.%(ext)s', f'.{FORMATO}')} baixado com sucesso!\n")
+        # Renomear
+        #subprocess.run(["powershell", "-File", "Renomear.ps1", saida])
         # Delay
         print(f"\033[33mAguardando {DELAY} Segundos\033[0m")
         time.sleep(DELAY)
     except subprocess.CalledProcessError as e:
         print(f"⚠️ Erro ao baixar {saida.replace('.%(ext)s', f'.{FORMATO}')}: {e}\n")
-
-
