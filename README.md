@@ -25,9 +25,10 @@ Montagem:
 Configuração:
 
 <pre>#######CONFIG#######
+F_PROFILE = 'teste'                              # Aqui vai o nome da pasta do profile firefox.
+FOLDER = 'C:\\Users\\GIGABYTE\\Documents\\MPD'   # Vazio cria uma pasta downloads.
 FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
-FOLDER = ''                                      # Vazio cria uma pasta downloads.
-F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+LOGS = False
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
 DELAY = 10                                       # Delay apra proteger o cookie
