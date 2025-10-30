@@ -25,10 +25,16 @@ Montagem:
 Configuração:
 
 <pre>#######CONFIG#######
-FORMATO = 'mp4'                               # Formato original é MP4, se quser criar Metadados, mude para MKV.
-FOLDER = ''                                   # Vazio cria uma pasta downloads.
-F_PROFILE = 'PROFILE.default-release'         # Aqui vai o nome da pasta do profile firefox.
-INVERTER_EPS = False                          # Isto corrige a ordem invertida se necessário.
-DELAY = 10                                    # Delay apra proteger o cookie
-THREADS = 2                                   # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
+FOLDER = ''                                      # Vazio cria uma pasta downloads.
+F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+####################
+INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
+DELAY = 10                                       # Delay apra proteger o cookie
+THREADS = 2                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG.
+CHECK_SEGS = True                                # Só funciona com HLS Nativo, True só deixa remuxar se não faltar segmentos.
+RESET_SEGS = False                               # Se ativada, quando um segmento falhar irá recomeçar o download do segmento zero.
+RETRY_SEGS = 10                                  # Se o segmento falhar, tenta baixar ele novamente por 10x.
+RETRY_VIDE = 5                                   # Se o video falhar, ele tenta novamente por 5x.
 ####################</pre>
