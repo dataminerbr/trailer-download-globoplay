@@ -5,9 +5,10 @@ from InquirerPy import inquirer
 
 
 #######CONFIG#######
-FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
-FOLDER = ''                                      # Vazio cria uma pasta downloads.
 F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+FOLDER = ''                                      # Vazio cria uma pasta downloads.
+FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
+LOGS = False
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
 DELAY = 10                                       # Delay apra proteger o cookie
@@ -18,6 +19,7 @@ RESET_SEGS = False                               # Se ativada, quando um segment
 RETRY_SEGS = 10                                  # Se o segmento falhar, tenta baixar ele novamente por 10x.
 RETRY_VIDE = 5                                   # Se o video falhar, ele tenta novamente por 5x.
 ####################
+
 
 
 # Caminho do JSON
@@ -86,7 +88,7 @@ for ep in selecionados:
         continue
 
     saida = str(output_dir / f"{serie_title} - {numero} - {titulo}.%(ext)s")
-    print(f"⬇️ Baixando: {saida.replace('.%(ext)s', f'.{FORMATO}')}")
+    print(f"⬇️ Baixando: {nome}")
 
     # Comando yt-dlp — baixa melhor vídeo e áudio
     cmd = [
@@ -118,13 +120,17 @@ for ep in selecionados:
     if RETRY_VIDE:
         cmd.extend(["--retries", str(RETRY_VIDE)])
 
+    if LOGS is False:
+        cmd.extend(["-q", "--no-warnings", "--progress"])
+
     try:
         subprocess.run(cmd, check=True)
-        print(f"✅ Episódio {saida.replace('.%(ext)s', f'.{FORMATO}')} baixado com sucesso!\n")
-        # Renomear
-        #subprocess.run(["powershell", "-File", "Renomear.ps1", saida])
+        print(f"✅ Episódio {nome} baixado com sucesso!\n")
         # Delay
         print(f"\033[33mAguardando {DELAY} Segundos\033[0m")
         time.sleep(DELAY)
     except subprocess.CalledProcessError as e:
-        print(f"⚠️ Erro ao baixar {saida.replace('.%(ext)s', f'.{FORMATO}')}: {e}\n")
+        if LOGS is False:
+            print(f"⚠️ Erro ao baixar: {nome}\n")
+        else:
+            print(f"⚠️ Erro ao baixar {nome}: {e}\n")
