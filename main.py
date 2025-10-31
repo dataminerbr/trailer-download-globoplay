@@ -7,7 +7,7 @@ from InquirerPy import inquirer
 #######CONFIG#######
 F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
 P_FOLDER = ''                                    # Vazio cria uma pasta downloads.
-S_FOLDER = True                                  #Se ativado, cria uma subpasta com o nome da serie.
+S_FOLDER = True                                  # Se ativado, cria uma subpasta com o nome da serie.
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
 HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG. ISto serve para usar o Checar segmentos, e mantem o formato do video origianl da plataforma, não o remuxa.
@@ -147,3 +147,4 @@ for ep in selecionados:
             print(f"⚠️ Erro ao baixar: {nome}\n")
         else:
             print(f"⚠️ Erro ao baixar {nome}: {e}\n")
+
