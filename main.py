@@ -6,18 +6,19 @@ from InquirerPy import inquirer
 
 #######CONFIG#######
 F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
-FOLDER = ''                                      # Vazio cria uma pasta downloads.
-FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV.
-LOGS = False
+P_FOLDER = ''                                    # Vazio cria uma pasta downloads.
+S_FOLDER = True                                  #Se ativado, cria uma subpasta com o nome da serie.
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
-DELAY = 10                                       # Delay apra proteger o cookie
-THREADS = 2                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
-HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG.
+HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG. ISto serve para usar o Checar segmentos, e mantem o formato do video origianl da plataforma, não o remuxa.
 CHECK_SEGS = True                                # Só funciona com HLS Nativo, True só deixa remuxar se não faltar segmentos.
 RESET_SEGS = False                               # Se ativada, quando um segmento falhar irá recomeçar o download do segmento zero.
+FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV. Só funciona com "HLS_NATIVE = False" (no caso, não irá checar os segmentos)
 RETRY_SEGS = 10                                  # Se o segmento falhar, tenta baixar ele novamente por 10x.
 RETRY_VIDE = 5                                   # Se o video falhar, ele tenta novamente por 5x.
+DELAY = 10                                       # Delay apra proteger o cookie
+THREADS = 2                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+LOGS = False                                     # Imprime LOGS durante o Download.
 ####################
 
 
@@ -30,7 +31,7 @@ with open(json_path, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # Pasta de destino
-output_dir = Path(FOLDER or "downloads")
+output_dir = Path(P_FOLDER or "downloads")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 # Série e episódios
@@ -86,8 +87,14 @@ for ep in selecionados:
     if not url:
         print(f"❌ Episódio {numero} sem link, pulando.")
         continue
+    
+    
+    if S_FOLDER:
+       sub_folder = "".join(c for c in serie_title if c.isalnum() or c in (" ", "_", "-")).strip().replace(" ", "_")
+       saida = str(output_dir / sub_folder / f"{serie_title} - {numero} - {titulo}.%(ext)s")
+    else:
+       saida = str(output_dir / f"{serie_title} - {numero} - {titulo}.%(ext)s")
 
-    saida = str(output_dir / f"{serie_title} - {numero} - {titulo}.%(ext)s")
     print(f"⬇️ Baixando: {nome}")
 
     # Comando yt-dlp — baixa melhor vídeo e áudio
@@ -96,10 +103,14 @@ for ep in selecionados:
         "--cookies-from-browser", f"firefox:{F_PROFILE}",
         "-S", "acodec:ec-3,acodec:aac,abr",
         "-f", "bv*+ba/b",
-        "--merge-output-format", FORMATO,
         "--concurrent-fragments", str(THREADS),
         "--add-header", "Referer: https://globoplay.globo.com/",
         "--add-header", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+        #"--write-subs",                    # Se ativdo, salva um copia da legenda.
+        "--sub-format", "srt",
+        "--sub-langs", "all",
+        "--embed-subs",
+        "--merge-output-format", FORMATO,
         "-o", saida,
         url,
     ]
@@ -126,6 +137,8 @@ for ep in selecionados:
     try:
         subprocess.run(cmd, check=True)
         print(f"✅ Episódio {nome} baixado com sucesso!\n")
+        # Renomear
+        #subprocess.run(["powershell", "-File", "Renomear.ps1", saida])
         # Delay
         print(f"\033[33mAguardando {DELAY} Segundos\033[0m")
         time.sleep(DELAY)
