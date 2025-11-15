@@ -95,7 +95,7 @@ for ep in selecionados:
     else:
        saida = str(output_dir / f"{serie_title} - {numero} - {titulo}.%(ext)s")
 
-    print(f"⬇️ Baixando: {nome}")
+    print(f"⬇️ Baixando: {saida.replace('.%(ext)s', f'.{FORMATO}')}")
 
     # Comando yt-dlp — baixa melhor vídeo e áudio
     cmd = [
@@ -136,7 +136,7 @@ for ep in selecionados:
 
     try:
         subprocess.run(cmd, check=True)
-        print(f"✅ Episódio {nome} baixado com sucesso!\n")
+        print(f"✅ Episódio {saida.replace('.%(ext)s', f'.{FORMATO}')} baixado com sucesso!\n")
         # Renomear
         #subprocess.run(["powershell", "-File", "Renomear.ps1", saida])
         # Delay
@@ -144,7 +144,6 @@ for ep in selecionados:
         time.sleep(DELAY)
     except subprocess.CalledProcessError as e:
         if LOGS is False:
-            print(f"⚠️ Erro ao baixar: {nome}\n")
+            print(f"⚠️ Erro ao baixar: {saida.replace('.%(ext)s', f'.{FORMATO}')}\n")
         else:
-            print(f"⚠️ Erro ao baixar {nome}: {e}\n")
-
+            print(f"⚠️ Erro ao baixar {saida.replace('.%(ext)s', f'.{FORMATO}')}: {e}\n")
