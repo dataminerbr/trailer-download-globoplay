@@ -5,28 +5,39 @@ from InquirerPy import inquirer
 
 
 #######CONFIG#######
-F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+COOKIES_FILE = 'cookies/default.txt'            # Arquivo de cookies no formato Netscape.
 P_FOLDER = ''                                    # Vazio cria uma pasta downloads.
 S_FOLDER = True                                  # Se ativado, cria uma subpasta com o nome da serie.
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
-HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG. ISto serve para usar o Checar segmentos, e mantem o formato do video origianl da plataforma, não o remuxa.
+HLS_NATIVE = False                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG. ISto serve para usar o Checar segmentos, e mantem o formato do video origianl da plataforma, não o remuxa.
 CHECK_SEGS = True                                # Só funciona com HLS Nativo, True só deixa remuxar se não faltar segmentos.
 RESET_SEGS = False                               # Se ativada, quando um segmento falhar irá recomeçar o download do segmento zero.
-FORMATO = 'mp4'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV. Só funciona com "HLS_NATIVE = False" (no caso, não irá checar os segmentos)
+FORMATO = 'mkv'                                  # Formato original é MP4, se quser criar Metadados, mude para MKV. Só funciona com "HLS_NATIVE = False" (no caso, não irá checar os segmentos)
 RETRY_SEGS = 10                                  # Se o segmento falhar, tenta baixar ele novamente por 10x.
 RETRY_VIDE = 5                                   # Se o video falhar, ele tenta novamente por 5x.
 DELAY = 10                                       # Delay apra proteger o cookie
-THREADS = 2                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
+THREADS = 10                                      # Use 2 a 4. Se aumentar mais que '2', aumente o tempo de delay.
 LOGS = False                                     # Imprime LOGS durante o Download.
 ####################
 
 
 
+# Validação do arquivo de cookies
+cookies_path = Path(COOKIES_FILE)
+if not cookies_path.exists():
+    print(f"❌ Arquivo de cookies não encontrado: {COOKIES_FILE}")
+    print(f"   Crie o arquivo '{COOKIES_FILE}' com os cookies no formato Netscape do Globoplay.")
+    exit(1)
+
 # Caminho do JSON
 json_path = Path("globoplay_trailers.json")
 
 # Lê o arquivo
+if not json_path.exists():
+    print(f"❌ Arquivo JSON não encontrado: {json_path}")
+    exit(1)
+
 with open(json_path, "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -100,7 +111,7 @@ for ep in selecionados:
     # Comando yt-dlp — baixa melhor vídeo e áudio
     cmd = [
         "yt-dlp",
-        "--cookies-from-browser", f"firefox:{F_PROFILE}",
+        "--cookies", str(cookies_path),
         "-S", "acodec:ec-3,acodec:aac,abr",
         "-f", "bv*+ba/b",
         "--concurrent-fragments", str(THREADS),

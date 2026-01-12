@@ -2,11 +2,12 @@
 Projeto para baixar trailers do site globoplay.
 <hr>
 
-Para o uso é necessario ter o aplicativo 'yt-dlp' na pasta do projeto ou no 'system32'.
+Para o uso é necessario ter o aplicativo 'yt-dlp' na pasta do projeto ou no PATH do sistema.
 <pre>https://github.com/yt-dlp/yt-dlp</pre>
 <hr>
-Também é nescessário logar com sua conta globoplay no navegador firefox e obter o seu profile, que é o nome de uma das pastas dentro de:
-<pre>%USERPROFILE%\AppData\Roaming\Mozilla\Firefox\Profiles</pre>
+Também é necessário criar um arquivo de cookies no formato Netscape. O arquivo deve estar em:
+<pre>cookies/default.txt</pre>
+Para obter os cookies do Globoplay, você pode usar extensões do navegador como "Get cookies.txt LOCALLY" ou "cookies.txt" que exportam cookies no formato Netscape. Basta logar no Globoplay e exportar os cookies para o arquivo <code>cookies/default.txt</code>.
 <hr>
 E se quiser pegar os conteudos do '.JSON' que contém dados do Trailer, você precisará de Tampermonkey no seu navegador.
 <hr>
@@ -18,16 +19,18 @@ Montagem:
 <pre>trailer-download-globoplay/
 ├── main.py
 ├── globoplay_trailers.json
-├── yt-dlp.exe (opcional / pode usar do system32)
+├── cookies/
+│   └── default.txt (arquivo de cookies no formato Netscape)
+├── yt-dlp.exe (opcional / pode usar do PATH)
 └── requirements.txt</pre>
 
 <hr>
 Configuração:
 
 <pre>#######CONFIG#######
-F_PROFILE = 'PROFILE.default-release'            # Aqui vai o nome da pasta do profile firefox.
+COOKIES_FILE = 'cookies/default.txt'            # Arquivo de cookies no formato Netscape.
 P_FOLDER = ''                                    # Vazio cria uma pasta downloads.
-S_FOLDER = True                                  #Se ativado, cria uma subpasta com o nome da serie.
+S_FOLDER = True                                  # Se ativado, cria uma subpasta com o nome da serie.
 ####################
 INVERTER_EPS = False                             # Isto corrige a ordem invertida se necessário.
 HLS_NATIVE = True                                # Istomuda o script para usar HLS do YT-DLP nativo e não o FFMPEG. ISto serve para usar o Checar segmentos, e mantem o formato do video origianl da plataforma, não o remuxa.
