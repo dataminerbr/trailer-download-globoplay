@@ -19,7 +19,7 @@ Montagem:
 ├── main.py
 ├── globoplay_trailers.json
 ├── yt-dlp.exe (opcional / pode usar do sistema)
-└── requirements.txt</pre>
+├── requirements.txt
 └── cookis.txt (opcional)</pre>
 
 <hr>
