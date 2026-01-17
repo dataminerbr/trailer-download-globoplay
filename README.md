@@ -20,7 +20,7 @@ Montagem:
 ├── globoplay_trailers.json
 ├── yt-dlp.exe (opcional / pode usar do sistema)
 ├── requirements.txt
-└── cookis.txt (opcional)</pre>
+└── cookies.txt (opcional)</pre>
 
 <hr>
 Configuração:
